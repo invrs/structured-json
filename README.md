@@ -66,7 +66,7 @@ Records can reference other records:
 {
   "aws-account": {
     "east": {
-      "image-bucket": "${aws-bucket.image}"
+      "image-bucket": "$aws-bucket.image"
     }
   },
   "aws-bucket": {
@@ -111,7 +111,7 @@ Mixins have a `$` at the front of their name. Here we define a `$website` mixin:
 {
   "aws-account": {
     "east": {
-      "image-bucket": "${aws-bucket.image}"
+      "image-bucket": "$aws-bucket.image"
     }
   },
   "aws-bucket": {
@@ -120,7 +120,7 @@ Mixins have a `$` at the front of their name. Here we define a `$website` mixin:
     },
     "image": {
       "name": "company-images",
-      "index": "${website.index}"
+      "index": "$website.index"
     }
   }
 }
@@ -134,7 +134,7 @@ The `$default` mixin defines default values.
 {
   "aws-account": {
     "east": {
-      "image-bucket": "${aws-bucket.image}"
+      "image-bucket": "$aws-bucket.image"
     }
   },
   "aws-bucket": {
@@ -143,6 +143,29 @@ The `$default` mixin defines default values.
     },
     "image": {
       "name": "company-image"
+    }
+  }
+}
+```
+
+## Merging
+
+Use the `<<` operator to merge values:
+
+```json
+{
+  "aws-account": {
+    "$east-bucket": {
+      "accelerate": true,
+      "error": "error.html"
+    },
+    "east": {
+      "image-bucket": "$east-bucket << $aws-bucket.image"
+    }
+  },
+  "aws-bucket": {
+    "image": {
+      "name": "company-images"
     }
   }
 }
@@ -176,7 +199,7 @@ Mixins that match a condition merge into the parent object:
 {
   "aws-account": {
     "east": {
-      "image-bucket": "${aws-bucket.image}"
+      "image-bucket": "$aws-bucket.image"
     }
   },
   "aws-bucket": {
@@ -199,8 +222,14 @@ Mixins that match a condition merge into the parent object:
 ```json
 {
   "aws-account": {
+    "$default": {
+      "image-bucket": {
+        "accelerate": true,
+        "error": "error.html"
+      }
+    },
     "east": {
-      "image-bucket": "${aws-bucket.image}"
+      "image-bucket": "<< $aws-bucket.image"
     }
   },
   "aws-bucket": {
@@ -217,7 +246,7 @@ Mixins that match a condition merge into the parent object:
       "$production": {
         "name": "company-images-prod"
       },
-      "index": "${website.index}"
+      "index": "$website.index"
     }
   }
 }
@@ -236,6 +265,8 @@ structured-json --production config.json > production.json
   "aws-account": {
     "east": {
       "image-bucket": {
+        "accelerate": true,
+        "error": "error.html",
         "grant": "id=xxx",
         "name": "company-images-prod",
         "index": "index.html"
@@ -252,15 +283,12 @@ structured-json --production config.json > production.json
 }
 ```
 
-## Separate JSON files
+## Compile multiple files
 
-Split your JSON into separate files, and the compiler will use the filename as the key:
+Concat all `.json` files in a directory:
 
 ```bash
-# ls .
-# aws-account.json    aws-bucket.json
-
 structured-json . > build.json
 ```
 
-Nested directories create nested objects.
+Use `-r` to search recursively.
