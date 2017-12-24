@@ -1,7 +1,7 @@
 {
   "name": "structured-json",
   "version": "0.0.1",
-  "description": "Structured JSON configuration framework",
+  "description": "Framework for complex configuration structures",
   "main": "index.js",
   "scripts": {
     "start": "doctoc --notitle README.md",
