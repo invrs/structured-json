@@ -128,7 +128,7 @@ Here we define a `$website` mixin:
 
 ### Defaults
 
-Use an empty mixin to define default values:
+Use an unnamed mixin (`$`) to define default values:
 
 ```json
 {
