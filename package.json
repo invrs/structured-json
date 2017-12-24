@@ -13,9 +13,7 @@
   },
   "keywords": [
     "json",
-    "configuration",
-    "js",
-    "node"
+    "configuration"
   ],
   "author": "Winton Welsh <winton@cyclo.ps>",
   "license": "MIT",
