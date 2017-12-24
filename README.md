@@ -128,7 +128,7 @@ Here we define a `$website` mixin:
 
 ### Defaults
 
-Use an unnamed mixin (`$`) to define default values:
+The `$default` mixin defines default values.
 
 ```json
 {
@@ -138,7 +138,7 @@ Use an unnamed mixin (`$`) to define default values:
     }
   },
   "aws-bucket": {
-    "$": {
+    "$default": {
       "grant": "id=xxx"
     },
     "image": {
@@ -202,7 +202,7 @@ Mixins that match a condition merge into the parent object:
     }
   },
   "aws-bucket": {
-    "$": {
+    "$default": {
       "grant": "id=xxx"
     },
     "$website": {
