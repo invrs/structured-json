@@ -19,8 +19,8 @@ Supports references, mixins, and conditions using a pure JSON syntax.
 - [Mixins](#mixins)
   - [Defaults](#defaults)
 - [Conditions](#conditions)
-  - [Specify conditions from the CLI](#specify-conditions-from-the-cli)
-  - [Specify from JS](#specify-from-js)
+  - [From the CLI](#from-the-cli-1)
+  - [From JS](#from-js-1)
   - [JSON syntax](#json-syntax)
 - [All together now](#all-together-now)
   - [Full example](#full-example)
@@ -150,13 +150,13 @@ The `$default` mixin defines default values.
 
 ## Conditions
 
-### Specify conditions from the CLI
+### From the CLI
 
 ```bash
 structured-json --staging config.json > staging.json
 ```
 
-### Specify from JS
+### From JS
 
 ```js
 import json from "structured-json"
