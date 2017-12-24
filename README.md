@@ -257,7 +257,7 @@ structured-json --production config.json > production.json
 Split your JSON into separate files, and the compiler will use the filename as the key:
 
 ```bash
-# ls
+# ls .
 # aws-account.json    aws-bucket.json
 
 structured-json . > build.json
