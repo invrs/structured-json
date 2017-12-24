@@ -2,26 +2,30 @@
 
 Framework for complex configuration structures that are easy to read, write, and document.
 
-Supports advanced features like interpolation, references, mixins, and conditions using a simple pure JSON syntax.
+Supports references, mixins, and conditions using a pure JSON syntax.
 
 ## Resources
 
-Top level objects describe a resource object:
+The top level contains resources:
 
 ```json
 {
-  "aws-account": {}
+  "aws-account": {},
+  "aws-bucket": {}
 }
 ```
 
 ## Records
 
-Resources contain record objects:
+Each resource contains records:
 
 ```json
 {
   "aws-account": {
-    "us-east-1": {}
+    "east": {}
+  },
+  "aws-bucket": {
+    "image": {}
   }
 }
 ```
@@ -33,21 +37,21 @@ Records can reference other records:
 ```json
 {
   "aws-account": {
-    "us-east-1": {
-      "bucket": "${aws-bucket/us-east-1}"
+    "east": {
+      "image-bucket": "${aws-bucket.image}"
     }
   },
   "aws-bucket": {
-    "us-east-1": {
-      "name": "mycompany-east"
+    "image": {
+      "name": "company-images"
     }
   }
 }
 ```
 
-## Compiler
+## Compile
 
-Install the library:
+Install:
 
 ```bash
 npm install -g structured-json
@@ -61,7 +65,7 @@ structured-json config.json > build.json
 
 Compile from JS:
 
-```bash
+```js
 import json from "structured-json"
 
 const config = json.build(`${__dirname}/config.json`)
@@ -71,22 +75,24 @@ console.log(config, null, 2)
 
 ## Mixins
 
-Here we use a mixin to add grant information to the bucket:
+A mixin defines an object to be used solely for referencing.
+
+Here we define a `$website` mixin:
 
 ```json
 {
   "aws-account": {
-    "us-east-1": {
-      "bucket": "${aws-bucket.us-east-1}"
+    "east": {
+      "image-bucket": "${aws-bucket.image}"
     }
   },
   "aws-bucket": {
-    "$grant-us-west-1": {
-      "id": "xxx"
+    "$website": {
+      "index": "index.html"
     },
-    "us-east-1": {
-      "name": "mycompany-east",
-      "grant": "id=${grant-us-west-1.id}"
+    "image": {
+      "name": "company-images",
+      "index": "${website.index}"
     }
   }
 }
@@ -94,21 +100,21 @@ Here we use a mixin to add grant information to the bucket:
 
 ## Default mixins
 
-We can also add the grant information to all buckets by default:
+Add grant information to all buckets by default:
 
 ```json
 {
   "aws-account": {
-    "us-east-1": {
-      "bucket": "${aws-bucket.us-east-1}"
+    "east": {
+      "image-bucket": "${aws-bucket.image}"
     }
   },
   "aws-bucket": {
     "$": {
       "grant": "id=xxx"
     },
-    "us-east-1": {
-      "name": "mycompany-east"
+    "image": {
+      "name": "company-image"
     }
   }
 }
@@ -119,12 +125,12 @@ We can also add the grant information to all buckets by default:
 Specify conditions from the CLI:
 
 ```bash
-structured-json -c staging=1 -c production=0 config.json > staging.json
+structured-json --staging config.json > staging.json
 ```
 
-Or in JS:
+Or from JS:
 
-```bash
+```js
 import json from "structured-json"
 
 const conditions = {
@@ -139,22 +145,22 @@ console.log(config, null, 2)
 
 ## Condition usage
 
-Matching mixins merge into the parent object:
+Mixins that match a condition merge into the parent object:
 
 ```json
 {
   "aws-account": {
-    "us-east-1": {
-      "bucket": "${aws-bucket.us-east-1}"
+    "east": {
+      "image-bucket": "${aws-bucket.image}"
     }
   },
   "aws-bucket": {
-    "us-east-1": {
+    "image": {
       "$staging": {
-        "name": "mycompany-east-stag"
+        "name": "company-images-stag"
       },
       "$production": {
-        "name": "mycompany-east-prod"
+        "name": "company-images-prod"
       }
     }
   }
@@ -168,21 +174,25 @@ Save config JSON:
 ```json
 {
   "aws-account": {
-    "us-east-1": {
-      "bucket": "${aws-bucket.us-east-1}"
+    "east": {
+      "image-bucket": "${aws-bucket.image}"
     }
   },
   "aws-bucket": {
     "$": {
       "grant": "id=xxx"
     },
-    "us-east-1": {
+    "$website": {
+      "index": "index.html"
+    },
+    "image": {
       "$staging": {
-        "name": "mycompany-east-stag"
+        "name": "company-images-stag"
       },
       "$production": {
-        "name": "mycompany-east-prod"
-      }
+        "name": "company-images-prod"
+      },
+      "index": "${website.index}"
     }
   }
 }
@@ -191,7 +201,7 @@ Save config JSON:
 Compile config JSON:
 
 ```bash
-structured-json -c staging=1 -c production=0 config.json > staging.json
+structured-json --production config.json > production.json
 ```
 
 View compiled JSON:
@@ -199,17 +209,19 @@ View compiled JSON:
 ```json
 {
   "aws-account": {
-    "us-east-1": {
-      "bucket": {
+    "east": {
+      "image-bucket": {
         "grant": "id=xxx",
-        "name": "mycompany-east-stag"
+        "name": "company-images-prod",
+        "index": "index.html"
       }
     }
   },
   "aws-bucket": {
-    "us-east-1": {
+    "company": {
       "grant": "id=xxx",
-      "name": "mycompany-east-stag"
+      "name": "company-images-prod",
+      "index": "index.html"
     }
   }
 }
