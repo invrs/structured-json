@@ -23,9 +23,9 @@ Supports references, mixins, and conditions using a pure JSON syntax.
   - [Specify from JS](#specify-from-js)
   - [JSON syntax](#json-syntax)
 - [All together now](#all-together-now)
-  - [Save config JSON](#save-config-json)
-  - [Compile config JSON](#compile-config-json)
-  - [View compiled JSON](#view-compiled-json)
+  - [Full example](#full-example)
+  - [Compile](#compile-1)
+  - [The result](#the-result)
 - [Separate JSON files](#separate-json-files)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -192,7 +192,7 @@ Mixins that match a condition merge into the parent object:
 
 ## All together now
 
-### Save config JSON
+### Full example
 
 ```json
 {
@@ -221,13 +221,13 @@ Mixins that match a condition merge into the parent object:
 }
 ```
 
-### Compile config JSON
+### Compile
 
 ```bash
 structured-json --production config.json > production.json
 ```
 
-### View compiled JSON
+### The result
 
 ```json
 {
