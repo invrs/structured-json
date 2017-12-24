@@ -105,7 +105,7 @@ console.log(config, null, 2)
 
 A mixin defines an object to be used solely for referencing.
 
-Here we define a `$website` mixin:
+Mixins have a `$` at the front of their name. Here we define a `$website` mixin:
 
 ```json
 {
