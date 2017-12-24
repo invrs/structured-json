@@ -21,7 +21,9 @@ Supports references, mixins, and conditions using a pure JSON syntax.
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Resources
+## Basic structure
+
+### Resources
 
 The top level contains resources:
 
@@ -32,7 +34,7 @@ The top level contains resources:
 }
 ```
 
-## Records
+### Records
 
 Each resource contains records:
 
@@ -68,19 +70,19 @@ Records can reference other records:
 
 ## Compile
 
-Install:
+### Install
 
 ```bash
 npm install -g structured-json
 ```
 
-Compile from the CLI:
+### From the CLI
 
 ```bash
 structured-json config.json > build.json
 ```
 
-Compile from JS:
+### From JS
 
 ```js
 import json from "structured-json"
@@ -115,9 +117,9 @@ Here we define a `$website` mixin:
 }
 ```
 
-## Default mixins
+### Defaults
 
-Add `grant` information to all buckets by default:
+Use an empty mixin to define default values:
 
 ```json
 {
@@ -137,30 +139,25 @@ Add `grant` information to all buckets by default:
 }
 ```
 
-## Specify conditions
+## Conditions
 
-Specify conditions from the CLI:
+### Specify conditions from the CLI
 
 ```bash
 structured-json --staging config.json > staging.json
 ```
 
-Or from JS:
+### Specify from JS
 
 ```js
 import json from "structured-json"
 
-const conditions = {
-  staging: true,
-  production: false
-}
-
-const config = json.build(`${__dirname}/config.json`, { conditions })
+const config = json.build(`${__dirname}/config.json`, { staging: true })
 
 console.log(config, null, 2)
 ```
 
-## Condition usage
+### JSON syntax
 
 Mixins that match a condition merge into the parent object:
 
@@ -186,7 +183,7 @@ Mixins that match a condition merge into the parent object:
 
 ## All together now
 
-Save config JSON:
+### Save config JSON
 
 ```json
 {
@@ -215,13 +212,13 @@ Save config JSON:
 }
 ```
 
-Compile config JSON:
+### Compile config JSON
 
 ```bash
 structured-json --production config.json > production.json
 ```
 
-View compiled JSON:
+### View compiled JSON
 
 ```json
 {
@@ -244,7 +241,7 @@ View compiled JSON:
 }
 ```
 
-### Split up your JSON
+## Separate JSON files
 
 Split your JSON into separate files, and the compiler will use the filename as the key:
 
