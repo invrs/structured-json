@@ -18,6 +18,7 @@ Supports references, mixins, and conditions using a pure JSON syntax.
   - [From JS](#from-js)
 - [Mixins](#mixins)
   - [Defaults](#defaults)
+- [Merging](#merging)
 - [Conditions](#conditions)
   - [From the CLI](#from-the-cli-1)
   - [From JS](#from-js-1)
@@ -26,7 +27,7 @@ Supports references, mixins, and conditions using a pure JSON syntax.
   - [Full example](#full-example)
   - [Compile with condition](#compile-with-condition)
   - [Output](#output)
-- [Separate JSON files](#separate-json-files)
+- [Compile multiple files](#compile-multiple-files)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
