@@ -4,6 +4,24 @@ Framework for complex configuration structures that are easy to read, write, and
 
 Supports references, mixins, and conditions using a pure JSON syntax.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Structured JSON](#structured-json)
+  - [Resources](#resources)
+  - [Records](#records)
+  - [References](#references)
+  - [Compile](#compile)
+  - [Mixins](#mixins)
+  - [Default mixins](#default-mixins)
+  - [Specify conditions](#specify-conditions)
+  - [Condition usage](#condition-usage)
+  - [All together now](#all-together-now)
+    - [Split up your JSON](#split-up-your-json)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Resources
 
 The top level contains resources:
@@ -100,7 +118,7 @@ Here we define a `$website` mixin:
 
 ## Default mixins
 
-Add grant information to all buckets by default:
+Add `grant` information to all buckets by default:
 
 ```json
 {
