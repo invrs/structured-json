@@ -1,0 +1,25 @@
+{
+  "name": "structured-json",
+  "version": "0.0.1",
+  "description": "Structured JSON configuration framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/winton/structured-json.git"
+  },
+  "keywords": [
+    "json",
+    "configuration",
+    "js",
+    "node"
+  ],
+  "author": "Winton Welsh <winton@cyclo.ps>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/winton/structured-json/issues"
+  },
+  "homepage": "https://github.com/winton/structured-json#readme"
+}
