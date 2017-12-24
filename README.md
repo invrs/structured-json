@@ -150,6 +150,8 @@ The `$default` mixin defines default values.
 
 ## Conditions
 
+Let's add a `staging` condition to the compilation.
+
 ### From the CLI
 
 ```bash
@@ -166,7 +168,7 @@ const config = json.build(`${__dirname}/config.json`, { staging: true })
 console.log(config, null, 2)
 ```
 
-### JSON syntax
+### Using a condition
 
 Mixins that match a condition merge into the parent object:
 
@@ -221,13 +223,13 @@ Mixins that match a condition merge into the parent object:
 }
 ```
 
-### Compile
+### Compile with condition
 
 ```bash
 structured-json --production config.json > production.json
 ```
 
-### The result
+### Output
 
 ```json
 {
