@@ -8,16 +8,25 @@ Supports references, mixins, and conditions using a pure JSON syntax.
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [Resources](#resources)
-- [Records](#records)
+- [Basic structure](#basic-structure)
+  - [Resources](#resources)
+  - [Records](#records)
 - [References](#references)
 - [Compile](#compile)
+  - [Install](#install)
+  - [From the CLI](#from-the-cli)
+  - [From JS](#from-js)
 - [Mixins](#mixins)
-- [Default mixins](#default-mixins)
-- [Specify conditions](#specify-conditions)
-- [Condition usage](#condition-usage)
+  - [Defaults](#defaults)
+- [Conditions](#conditions)
+  - [Specify conditions from the CLI](#specify-conditions-from-the-cli)
+  - [Specify from JS](#specify-from-js)
+  - [JSON syntax](#json-syntax)
 - [All together now](#all-together-now)
-  - [Split up your JSON](#split-up-your-json)
+  - [Save config JSON](#save-config-json)
+  - [Compile config JSON](#compile-config-json)
+  - [View compiled JSON](#view-compiled-json)
+- [Separate JSON files](#separate-json-files)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
