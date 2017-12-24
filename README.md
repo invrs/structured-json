@@ -21,11 +21,11 @@ Supports references, mixins, and conditions using a pure JSON syntax.
 - [Conditions](#conditions)
   - [From the CLI](#from-the-cli-1)
   - [From JS](#from-js-1)
-  - [JSON syntax](#json-syntax)
+  - [Using a condition](#using-a-condition)
 - [All together now](#all-together-now)
   - [Full example](#full-example)
-  - [Compile](#compile-1)
-  - [The result](#the-result)
+  - [Compile with condition](#compile-with-condition)
+  - [Output](#output)
 - [Separate JSON files](#separate-json-files)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
