@@ -38,27 +38,28 @@ export function reference({ json, ctx=json }) {
 }
 
 export function mergeRefs({ json, ctx=json, key }) {
-  let vals = []
   let regex = /(<<\s*)?\$([\w\.\-]+)/g
-  let match
+  let vals = []
 
   if (json[key].match(/^<</)) {
     json[key] = `$default.${key} ${json[key]}`
   }
 
+  let match
   while (match = regex.exec(json[key])) {
+    let reducer = (memo, key, index) =>
+      contextOrRoot({ json: memo, ctx, key, index })
     let keys = match[2].split(/\./)
-    let obj = keys.reduce(
-      (memo, key, index) => {
-        let mixin = `$${key}`
-        let c = ctx[mixin] || ctx[key]
-        let m = memo[mixin] || memo[key]
-        return index == 0 ? c || m : m
-      },
-      json
-    )
+    let obj = keys.reduce(reducer, json)
     vals.push(obj)
   }
 
   return vals
+}
+
+function contextOrRoot({ json, ctx, key, index }) {
+  let mixin = `$${key}`
+  let c = ctx[mixin] || ctx[key]
+  let j = json[mixin] || json[key]
+  return index == 0 ? c || j : j
 }
