@@ -38,23 +38,32 @@ export function reference({ json, ctx=json }) {
 }
 
 export function mergeRefs({ json, ctx=json, key }) {
-  let regex = /(<<\s*)?\$([\w\.\-]+)/g
-  let vals = []
-
   if (json[key].match(/^<</)) {
     json[key] = `$default.${key} ${json[key]}`
   }
 
-  let match
+  let refs = gatherRefs({ json, ctx, key })
+
+  if (refs.length == 1) {
+    return refs[0]
+  } else {
+    return Object.assign(...refs)
+  }
+}
+
+function gatherRefs({ json, ctx=json, key }) {
+  let regex = /(<<\s*)?\$([\w\.\-]+)/g
+  let match, refs = []
+  
   while (match = regex.exec(json[key])) {
     let reducer = (memo, key, index) =>
       contextOrRoot({ json: memo, ctx, key, index })
     let keys = match[2].split(/\./)
     let obj = keys.reduce(reducer, json)
-    vals.push(obj)
+    refs.push(obj)
   }
 
-  return vals
+  return refs
 }
 
 function contextOrRoot({ json, ctx, key, index }) {
