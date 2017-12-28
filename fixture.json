@@ -1,0 +1,33 @@
+{
+  "$test": {
+    "hello": true
+  },
+  "aws-account": {
+    "$default": {
+      "image-bucket": {
+        "accelerate": true,
+        "error": "error.html"
+      }
+    },
+    "east": {
+      "image-bucket": "<< $aws-bucket.image << $test"
+    }
+  },
+  "aws-bucket": {
+    "$default": {
+      "grant": "id=xxx"
+    },
+    "$website": {
+      "index": "index.html"
+    },
+    "image": {
+      "$staging": {
+        "name": "company-images-stag"
+      },
+      "$production": {
+        "name": "company-images-prod"
+      },
+      "index": "$website.index"
+    }
+  }
+}
