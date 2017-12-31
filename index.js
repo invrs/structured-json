@@ -46,18 +46,7 @@ export function reference({ json, loc, deps=new DepGraph(), mixins={} }) {
   }
 
   if (!loc) {
-    let nodes = Object.keys(deps.nodes)
-    for (let node of nodes) {
-      for (let dep of deps.dependenciesOf(node)) {
-        for (let n of nodes) {
-          let esc = dep.replace(/([\.\$])/, "\\$1")
-          let regex = new RegExp(`^${esc}\\.`)
-          if (n.match(regex)) {
-            deps.addDependency(node, n)
-          }
-        }
-      }
-    }
+    extraDeps({ deps })
     console.log(deps.overallOrder())
   }
 }
@@ -75,11 +64,15 @@ export function resolveRefs({ json, loc, mixins={} }) {
   for (let key in json) {
     if (matchValue({ json, key })) {
       json[key] = gatherRefs({ json, key })
-        .map(ref => {
+        .map((ref, i) => {
           let { name, op } = ref
           let [ firstKey ] = matchFirstKey({ name })
           let mixin = mixins[firstKey]
-          return `${op || ""}${mixin || ""}${name}`
+          let parent
+          if (i == 0 && op) {
+            parent = `${parentLoc({ loc })}$default.${key}`
+          }
+          return `${parent || ""}${op || ""}${mixin || ""}${name}`
         })
         .join("")
     }
@@ -100,6 +93,25 @@ export function buildDeps({ json, deps, loc }) {
       }
     }
   }
+}
+
+export function extraDeps({ deps }) {
+  let nodes = Object.keys(deps.nodes)
+  for (let node of nodes) {
+    for (let dep of deps.dependenciesOf(node)) {
+      for (let n of nodes) {
+        let esc = dep.replace(/([\.\$])/, "\\$1")
+        let regex = new RegExp(`^${esc}\\.`)
+        if (n.match(regex)) {
+          deps.addDependency(node, n)
+        }
+      }
+    }
+  }
+}
+
+export function parentLoc({ loc }) {
+  return loc.replace(/[^.]+\.$/, "")
 }
 
 export function matchFirstKey({ name }) {
