@@ -18,11 +18,11 @@ export function readJson(path) {
 
 export function condition({ json, options={} }) {
   for (let key in json) {
-    let option = key.replace(/^\$/, "")
-    if (json[key] && options[option]) {
-      Object.assign(json, json[key])
-    }
     if (json[key].constructor === Object) {
+      let option = key.replace(/^\$/, "")
+      if (options[option]) {
+        Object.assign(json, json[key])
+      }
       condition({ json: json[key], options })
     }
   }
