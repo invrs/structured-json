@@ -18,9 +18,9 @@ export function readJson(path) {
 
 export function condition({ json, options={} }) {
   for (let key in json) {
-    let mixin = `$${key}`
-    if (json[mixin] && options[key]) {
-      Object.assign(json, json[mixin])
+    let option = key.replace(/^\$/, "")
+    if (json[key] && options[option]) {
+      Object.assign(json, json[key])
     }
     if (json[key].constructor === Object) {
       condition({ json: json[key], options })
@@ -32,7 +32,6 @@ export function reference({ json, loc, deps=new DepGraph(), mixins={} }) {
   gatherMixins({ json, mixins, loc })
   resolveRefs({ json, mixins, loc })
   buildDeps({ json, deps, loc })
-
 
   for (let key in json) {
     if (json[key].constructor === Object) {

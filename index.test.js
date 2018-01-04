@@ -1,7 +1,7 @@
 import { build, mergeRefs } from "./index"
 
 test('build', () => {
-  const json = build(`${__dirname}/fixture.json`)
+  const json = build(`${__dirname}/fixture.json`, { production: true })
   expect(json).toEqual({
     "aws-account": {
       "east": {
@@ -10,14 +10,16 @@ test('build', () => {
           "error": "error.html",
           "index": "index.html",
           "grant": "id=xxx",
-          "hello": true
+          "hello": true,
+          "name": "company-images-prod"
         }
       }
     },
     "aws-bucket": {
       "image": {
         "index": "index.html",
-        "grant": "id=xxx"
+        "grant": "id=xxx",
+        "name": "company-images-prod"
       }
     }
   })
