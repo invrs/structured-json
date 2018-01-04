@@ -1,4 +1,4 @@
-import { build } from "./lib"
+import { build } from "../lib"
 
 test('build', () => {
   const json = build(`${__dirname}/fixture.json`, { production: true })

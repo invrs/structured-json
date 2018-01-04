@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel lib/index.js --out-file dist.js",
     "start": "doctoc --notitle README.md",
-    "test": "jest"
+    "test": "jest test"
   },
   "repository": {
     "type": "git",
