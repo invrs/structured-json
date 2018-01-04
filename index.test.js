@@ -1,4 +1,4 @@
-import { build, mergeRefs } from "./index"
+import { build } from "./lib"
 
 test('build', () => {
   const json = build(`${__dirname}/fixture.json`, { production: true })
