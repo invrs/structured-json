@@ -5,8 +5,8 @@ export function build(path, options = {}) {
   const json = readJson(path)
 
   condition({ json, options })
-  reference({ json, options })
   defaults({ json, options })
+  reference({ json, options })
   clean({ json, options })
   
   return json
