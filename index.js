@@ -6,9 +6,8 @@ export function build(path, options = {}) {
 
   condition({ json, options })
   reference({ json, options })
-  // defaults({ json, options })
-  // reference({ json, options })
-  // clean({ json, options })
+  defaults({ json, options })
+  clean({ json, options })
   
   return json
 }
@@ -34,6 +33,7 @@ export function reference({ json, loc, deps=new DepGraph(), mixins={} }) {
   resolveRefs({ json, mixins, loc })
   buildDeps({ json, deps, loc })
 
+
   for (let key in json) {
     if (json[key].constructor === Object) {
       reference({
@@ -47,8 +47,38 @@ export function reference({ json, loc, deps=new DepGraph(), mixins={} }) {
 
   if (!loc) {
     extraDeps({ deps })
-    console.log(deps.overallOrder())
+    for (let loc of deps.overallOrder()) {
+      let { obj, key } = getValue({ json, loc })
+      if (matchValue({ json: obj, key })) {
+        let refs = gatherRefs({ json: obj, key })
+        obj[key] = refs.reduce((memo, ref) => {
+          let val = getValue({ json, loc: ref.name })
+          if (val.obj[val.key].constructor === Object) {
+            return Object.assign(memo, val.obj[val.key])
+          } else {
+            return val.obj[val.key]
+          }
+        }, {})
+      }
+    }
   }
+}
+
+export function getValue({ json, loc }) {
+  let keys = loc.split(/\./)
+  return keys.reduce((memo, key, index) => {
+    if (!memo[key]) {
+      key = key.replace(/^\$/, "")
+    }
+    if (!memo[key]) {
+      throw new Error(`reference not found: ${key}`)
+    }
+    if (keys.length == index + 1) {
+      return { obj: memo, key }
+    } else {
+      return memo[key]
+    }
+  }, json)
 }
 
 export function gatherMixins({ json, loc, mixins }) {
@@ -98,15 +128,16 @@ export function buildDeps({ json, deps, loc }) {
 export function extraDeps({ deps }) {
   let nodes = Object.keys(deps.nodes)
   for (let node of nodes) {
-    for (let dep of deps.dependenciesOf(node)) {
-      for (let n of nodes) {
-        let esc = dep.replace(/([\.\$])/, "\\$1")
-        let regex = new RegExp(`^${esc}\\.`)
-        if (n.match(regex)) {
-          deps.addDependency(node, n)
-        }
-      }
-    }
+    dependOnParent({ deps, node: node.split(/\./) })
+  }
+}
+
+export function dependOnParent({ deps, node }) {
+  let dep = node.slice(0, -1)
+  if (dep.length) {
+    deps.addNode(dep.join("."))
+    deps.addDependency(dep.join("."), node.join("."))
+    dependOnParent({ deps, node: dep })
   }
 }
 
