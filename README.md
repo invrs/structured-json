@@ -12,20 +12,18 @@ Supports references, mixins, and conditions using a pure JSON syntax.
   - [Resources](#resources)
   - [Records](#records)
 - [References](#references)
+- [Install](#install)
 - [Build](#build)
-  - [Install](#install)
-  - [Use Library](#use-library)
 - [Mixins](#mixins)
-  - [Defaults](#defaults)
+  - [Default mixins](#default-mixins)
+  - [Conditional mixins](#conditional-mixins)
+    - [Build with condition](#build-with-condition)
+    - [Use condition](#use-condition)
 - [Merging](#merging)
-- [Conditions](#conditions)
-  - [Build](#build-1)
-  - [Using a condition](#using-a-condition)
 - [All together now](#all-together-now)
   - [Full example](#full-example)
-  - [Build with condition](#build-with-condition)
+  - [Build with condition](#build-with-condition-1)
   - [Output](#output)
-- [Compile multiple files](#compile-multiple-files)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -59,7 +57,7 @@ Each resource contains records:
 
 ## References
 
-Records can reference other records:
+Record properties can reference other records:
 
 ```json
 {
@@ -76,15 +74,13 @@ Records can reference other records:
 }
 ```
 
-## Build
-
-### Install
+## Install
 
 ```bash
 npm install structured-json
 ```
 
-### Use Library
+## Build
 
 ```js
 import { readFileSync } from "fs"
@@ -97,13 +93,13 @@ const build = json.build(config)
 console.log(JSON.stringify(build, null, 2))
 ```
 
-The `build` function optionally accepts multiple objects.
+The `build` function accepts one or more objects.
 
 ## Mixins
 
-A mixin defines an object to be used solely for referencing.
+A mixin defines an object used solely for referencing.
 
-Mixins have a `$` at the front of their name. Here we define a `$website` mixin:
+Mixin names begin with a `$`. Here we define a `$website` mixin:
 
 ```json
 {
@@ -124,9 +120,9 @@ Mixins have a `$` at the front of their name. Here we define a `$website` mixin:
 }
 ```
 
-### Defaults
+### Default mixins
 
-The `$default` mixin defines default values.
+The `$default` mixin defines default record properties:
 
 ```json
 {
@@ -146,42 +142,16 @@ The `$default` mixin defines default values.
 }
 ```
 
-## Merging
+### Conditional mixins
 
-Use the `<<` operator to merge values:
-
-```json
-{
-  "aws-account": {
-    "$east-bucket": {
-      "accelerate": true,
-      "error": "error.html"
-    },
-    "east": {
-      "image-bucket": "$east-bucket << $aws-bucket.image"
-    }
-  },
-  "aws-bucket": {
-    "image": {
-      "name": "company-images"
-    }
-  }
-}
-```
-
-## Conditions
-
-Let's add a `staging` condition to the compilation.
-
-### Build
+#### Build with condition
 
 ```js
-const build = json.build(config, { conditions: { staging: true } })
+const conditions = { staging: true }
+const build = json.build(config, { conditions })
 ```
 
-### Using a condition
-
-Mixins that match a condition merge into the parent object:
+#### Use condition
 
 ```json
 {
@@ -198,6 +168,29 @@ Mixins that match a condition merge into the parent object:
       "$production": {
         "name": "company-images-prod"
       }
+    }
+  }
+}
+```
+
+## Merging
+
+The `<<` operator merges objects:
+
+```json
+{
+  "aws-account": {
+    "$east-bucket": {
+      "accelerate": true,
+      "error": "error.html"
+    },
+    "east": {
+      "image-bucket": "$east-bucket << $aws-bucket.image"
+    }
+  },
+  "aws-bucket": {
+    "image": {
+      "name": "company-images"
     }
   }
 }
@@ -274,16 +267,9 @@ console.log(JSON.stringify(build, null, 2))
       "name": "company-images-prod",
       "index": "index.html"
     }
+  },
+  "conditions": {
+    "production": true
   }
 }
 ```
-
-## Compile multiple files
-
-Concat all `.json` files in a directory:
-
-```bash
-structured-json . > build.json
-```
-
-Use `-r` to search recursively.
