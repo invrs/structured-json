@@ -21,6 +21,7 @@ test('build', () => {
           "index": "index.html",
           "grant": "id=xxx",
           "hello": true,
+          "world": true,
           "name": "company-images-prod"
         }
       }

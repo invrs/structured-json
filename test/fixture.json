@@ -9,8 +9,11 @@
         "error": "error.html"
       }
     },
+    "$test2": {
+      "world": true
+    },
     "east": {
-      "image-bucket": "<< $aws-bucket.image << $test"
+      "image-bucket": "<< $aws-bucket.image << $test << $test2"
     }
   },
   "aws-bucket": {
