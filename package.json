@@ -4,7 +4,7 @@
   "description": "Framework for complex configuration structures",
   "main": "dist.js",
   "scripts": {
-    "build": "babel lib/index.js --out-file dist.js",
+    "prepublish": "babel lib/index.js --out-file dist.js",
     "start": "doctoc --notitle README.md",
     "test": "jest test"
   },
