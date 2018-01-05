@@ -1,6 +1,6 @@
 {
   "name": "structured-json",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Framework for complex configuration structures",
   "main": "dist.js",
   "scripts": {
