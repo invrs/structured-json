@@ -1,8 +1,18 @@
+import { readFileSync } from "fs"
 import { build } from "../lib"
 
+const fixture = JSON.parse(
+  readFileSync(`${__dirname}/fixture.json`, "utf8")
+)
+
 test('build', () => {
-  const json = build(`${__dirname}/fixture.json`, { production: true })
+  const conditions = { production: true }
+  const json = build(fixture, { conditions })
+  
   expect(json).toEqual({
+    "conditions": {
+      "production": true,
+    },
     "aws-account": {
       "east": {
         "image-bucket": {

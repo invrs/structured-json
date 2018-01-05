@@ -12,20 +12,18 @@ Supports references, mixins, and conditions using a pure JSON syntax.
   - [Resources](#resources)
   - [Records](#records)
 - [References](#references)
-- [Compile](#compile)
+- [Build](#build)
   - [Install](#install)
-  - [From the CLI](#from-the-cli)
-  - [From JS](#from-js)
+  - [Use Library](#use-library)
 - [Mixins](#mixins)
   - [Defaults](#defaults)
 - [Merging](#merging)
 - [Conditions](#conditions)
-  - [From the CLI](#from-the-cli-1)
-  - [From JS](#from-js-1)
+  - [Build](#build-1)
   - [Using a condition](#using-a-condition)
 - [All together now](#all-together-now)
   - [Full example](#full-example)
-  - [Compile with condition](#compile-with-condition)
+  - [Build with condition](#build-with-condition)
   - [Output](#output)
 - [Compile multiple files](#compile-multiple-files)
 
@@ -78,29 +76,28 @@ Records can reference other records:
 }
 ```
 
-## Compile
+## Build
 
 ### Install
 
 ```bash
-npm install -g structured-json
+npm install structured-json
 ```
 
-### From the CLI
-
-```bash
-structured-json config.json > build.json
-```
-
-### From JS
+### Use Library
 
 ```js
+import { readFileSync } from "fs"
 import json from "structured-json"
 
-const config = json.build(`${__dirname}/config.json`)
+const path = `${__dirname}/config.json`
+const config = JSON.parse(readFileSync(path))
+const build = json.build(config)
 
-console.log(config, null, 2)
+console.log(JSON.stringify(build, null, 2))
 ```
+
+The `build` function optionally accepts multiple objects.
 
 ## Mixins
 
@@ -176,20 +173,10 @@ Use the `<<` operator to merge values:
 
 Let's add a `staging` condition to the compilation.
 
-### From the CLI
-
-```bash
-structured-json --staging config.json > staging.json
-```
-
-### From JS
+### Build
 
 ```js
-import json from "structured-json"
-
-const config = json.build(`${__dirname}/config.json`, { staging: true })
-
-console.log(config, null, 2)
+const build = json.build(config, { conditions: { staging: true } })
 ```
 
 ### Using a condition
@@ -253,10 +240,17 @@ Mixins that match a condition merge into the parent object:
 }
 ```
 
-### Compile with condition
+### Build with condition
 
-```bash
-structured-json --production config.json > production.json
+```js
+import { readFileSync } from "fs"
+import json from "structured-json"
+
+const path = `${__dirname}/config.json`
+const config = JSON.parse(readFileSync(path))
+const build = json.build(config, { conditions: { production: true } })
+
+console.log(JSON.stringify(build, null, 2))
 ```
 
 ### Output
