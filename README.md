@@ -87,9 +87,9 @@ veganProducts   // { kale: { vegan },
                 //   tofu: { vegan } }
 ```
 
-Here the merge operator defines a default object for its siblings (`">>":`).
+Here the merge operator defines a default object for its siblings.
 
-Depth +1 by adding successive merge operators (`">> >>":`).
+Add +1 to the depth by adding successive merge operators (`">> >>":`).
 
 ## Mixin
 
