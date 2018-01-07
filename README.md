@@ -1,78 +1,14 @@
 # Structured JSON
 
-Framework for complex configuration structures that are easy to read, write, and document.
+Framework for JSON structures that are easy to read, write, and document.
 
-Supports references, mixins, and conditions using a pure JSON syntax.
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-
-- [Basic structure](#basic-structure)
-  - [Resources](#resources)
-  - [Records](#records)
-- [References](#references)
-- [Install](#install)
-- [Build](#build)
-- [Mixins](#mixins)
-  - [Default mixins](#default-mixins)
-  - [Conditional mixins](#conditional-mixins)
-    - [Build with condition](#build-with-condition)
-    - [Use condition](#use-condition)
-- [Merging](#merging)
-- [All together now](#all-together-now)
-  - [Full example](#full-example)
-  - [Build with condition](#build-with-condition-1)
-  - [Output](#output)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-## Basic structure
-
-### Resources
-
-The top level contains resources:
-
-```json
-{
-  "aws-account": {},
-  "aws-bucket": {}
-}
-```
-
-### Records
-
-Each resource contains records:
-
-```json
-{
-  "aws-account": {
-    "east": {}
-  },
-  "aws-bucket": {
-    "image": {}
-  }
-}
-```
-
-## References
-
-Record properties can reference other records:
-
-```json
-{
-  "aws-account": {
-    "east": {
-      "image-bucket": "$aws-bucket.image"
-    }
-  },
-  "aws-bucket": {
-    "image": {
-      "name": "company-images"
-    }
-  }
-}
-```
+Action                               | Operator     | Key/Value
+------------------------------------ | ------------ | ---------
+[Assign Value](#assign)              | `<=`         | Value
+[Assign Defaults](#defaults)         | `<<`, `>>`   | Key
+[Merge](#merge)                      | `<<`, `>>`   | Value
+[Mixin](#mixin)                      | `$`          | Key
+[Conditional Defaults](#conditional) | `<<?`, `>>?` | Key
 
 ## Install
 
@@ -80,196 +16,105 @@ Record properties can reference other records:
 npm install structured-json
 ```
 
-## Build
+## Import
 
 ```js
-import { readFileSync } from "fs"
-import json from "structured-json"
-
-const path = `${__dirname}/config.json`
-const config = JSON.parse(readFileSync(path))
-const build = json.build(config)
-
-console.log(JSON.stringify(build, null, 2))
+import { build } from "structured-json"
 ```
 
-The `build` function accepts one or more objects.
-
-## Mixins
-
-A mixin defines an object used solely for referencing.
-
-Mixin names begin with a `$`. Here we define a `$website` mixin:
-
-```json
-{
-  "aws-account": {
-    "east": {
-      "image-bucket": "$aws-bucket.image"
-    }
-  },
-  "aws-bucket": {
-    "$website": {
-      "index": "index.html"
-    },
-    "image": {
-      "name": "company-images",
-      "index": "$website.index"
-    }
-  }
-}
-```
-
-### Default mixins
-
-The `$default` mixin defines default record properties:
-
-```json
-{
-  "aws-account": {
-    "east": {
-      "image-bucket": "$aws-bucket.image"
-    }
-  },
-  "aws-bucket": {
-    "$default": {
-      "grant": "id=xxx"
-    },
-    "image": {
-      "name": "company-image"
-    }
-  }
-}
-```
-
-### Conditional mixins
-
-#### Build with condition
+## Assign
 
 ```js
-const conditions = { staging: true }
-const build = json.build(config, { conditions })
-```
-
-#### Use condition
-
-```json
-{
-  "aws-account": {
-    "east": {
-      "image-bucket": "$aws-bucket.image"
+let { stores, products } = build({
+  "stores": {
+    "grocery": {
+      "products": "<= foodProducts"
     }
   },
-  "aws-bucket": {
-    "image": {
-      "$staging": {
-        "name": "company-images-stag"
-      },
-      "$production": {
-        "name": "company-images-prod"
-      }
+  "foodProducts": {
+    "milk": {
+      "store": "<= stores.grocery"
     }
   }
-}
+})
+
+stores.grocery.products // { milk }
+products.milk.store     // { products }
 ```
 
-## Merging
+Assignment supports circular structures, but is up to you to be careful about infinte enumeration.
 
-The `<<` operator merges objects:
-
-```json
-{
-  "aws-account": {
-    "$east-bucket": {
-      "accelerate": true,
-      "error": "error.html"
-    },
-    "east": {
-      "image-bucket": "$east-bucket << $aws-bucket.image"
-    }
-  },
-  "aws-bucket": {
-    "image": {
-      "name": "company-images"
-    }
-  }
-}
-```
-
-## All together now
-
-### Full example
-
-```json
-{
-  "aws-account": {
-    "$default": {
-      "image-bucket": {
-        "accelerate": true,
-        "error": "error.html"
-      }
-    },
-    "east": {
-      "image-bucket": "<< $aws-bucket.image"
-    }
-  },
-  "aws-bucket": {
-    "$default": {
-      "grant": "id=xxx"
-    },
-    "$website": {
-      "index": "index.html"
-    },
-    "image": {
-      "$staging": {
-        "name": "company-images-stag"
-      },
-      "$production": {
-        "name": "company-images-prod"
-      },
-      "index": "$website.index"
-    }
-  }
-}
-```
-
-### Build with condition
+## Merge
 
 ```js
-import { readFileSync } from "fs"
-import json from "structured-json"
+let { products } = build({
+  "organicProducts": {
+    "eggs": {},
+    "milk": {}
+  },
+  "veganProducts": {
+    "kale": {},
+    "tofu": {}
+  },
+  "products": "<= organicProducts << veganProducts"
+})
 
-const path = `${__dirname}/config.json`
-const config = JSON.parse(readFileSync(path))
-const build = json.build(config, { conditions: { production: true } })
-
-console.log(JSON.stringify(build, null, 2))
+products // { eggs: {},
+         //   milk: {},
+         //   kale: {},
+         //   tofu: {} }
 ```
 
-### Output
+## Defaults
 
-```json
-{
-  "aws-account": {
-    "east": {
-      "image-bucket": {
-        "accelerate": true,
-        "error": "error.html",
-        "grant": "id=xxx",
-        "name": "company-images-prod",
-        "index": "index.html"
-      }
-    }
+```js
+let { organicProducts, veganProducts } = build({
+  "organicProducts": {
+    ">>": {
+      "organic": true
+    },
+    "eggs": {},
+    "milk": {}
   },
-  "aws-bucket": {
-    "company": {
-      "grant": "id=xxx",
-      "name": "company-images-prod",
-      "index": "index.html"
-    }
-  },
-  "conditions": {
-    "production": true
+  "veganProducts": {
+    ">>": {
+      "vegan": true
+    },
+    "kale": {},
+    "tofu": {}
   }
-}
+})
+
+organicProducts // { eggs: { organic },
+                //   milk: { organic } }
+veganProducts   // { kale: { vegan },
+                //   tofu: { vegan } }
+```
+
+The merge operator can define a default object for its siblings (`">>":`).
+
+Define defaults for all nested objects at depth +1 by adding successive merge operators (`">> >>":`).
+
+The assign operator (`<=`) is implicit when a string is provided as a default object.
+
+## Mixin
+
+```js
+let { products } = build({
+  "$green": {
+    color: "green"
+  },
+  "$white": {
+    color: "white"
+  },
+  "products": {
+    "milk": { "<<": "$white" },
+    "kale": { "<<": "$green" },
+    "tofu": { "<<": "$white" }
+  }
+})
+
+products // { milk: { color },
+         //   kale: { color },
+         //   tofu: { color } }
 ```

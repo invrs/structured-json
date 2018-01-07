@@ -3,34 +3,39 @@
     "hello": true
   },
   "aws-account": {
-    "$default": {
+    ">>": {
       "image-bucket": {
         "accelerate": true,
         "error": "error.html"
       }
     },
     "$test2": {
+      "hello": false,
       "world": true
     },
     "east": {
-      "image-bucket": "<< $aws-bucket.image << $test << $test2"
+      "image-bucket": "<< aws-bucket.image << $test >> $test2",
+      "basic-bucket": "<= aws-bucket.image >> $test << $test2"
     }
   },
   "aws-bucket": {
-    "$default": {
+    ">>": {
       "grant": "id=xxx"
     },
-    "$website": {
+    "$test": {
       "index": "index.html"
     },
     "image": {
-      "$staging": {
+      "<<?staging": {
         "name": "company-images-stag"
       },
-      "$production": {
+      "<<?production": {
         "name": "company-images-prod"
       },
-      "index": "$website.index"
+      "<<": "$test",
+      "index2": "$test.index",
+      "index3": "<= aws-bucket.$test.index",
+      "hello": false
     }
   }
 }
