@@ -42,7 +42,7 @@ stores.grocery.products // { milk }
 products.milk.store     // { products }
 ```
 
-Assignment supports circular structures, but is up to you to be careful about infinte enumeration.
+Assignment supports circular references, but is up to you to be careful about infinite enumeration.
 
 ## Merge
 
@@ -70,16 +70,12 @@ products // { eggs: {},
 ```js
 let { organicProducts, veganProducts } = build({
   "organicProducts": {
-    ">>": {
-      "organic": true
-    },
+    ">>": { "organic": true },
     "eggs": {},
     "milk": {}
   },
   "veganProducts": {
-    ">>": {
-      "vegan": true
-    },
+    ">>": { "vegan": true },
     "kale": {},
     "tofu": {}
   }
@@ -91,11 +87,9 @@ veganProducts   // { kale: { vegan },
                 //   tofu: { vegan } }
 ```
 
-The merge operator can define a default object for its siblings (`">>":`).
+Here the merge operator defines a default object for its siblings (`">>":`).
 
-Define defaults for all nested objects at depth +1 by adding successive merge operators (`">> >>":`).
-
-The assign operator (`<=`) is implicit when a string is provided as a default object.
+Depth +1 by adding successive merge operators (`">> >>":`).
 
 ## Mixin
 
