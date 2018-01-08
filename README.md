@@ -108,9 +108,9 @@ let { products } = build({
   }
 })
 
-products // { milk: { color },
-         //   kale: { color },
-         //   tofu: { color } }
+products // { milk: { color: "white" },
+         //   kale: { color: "green" },
+         //   tofu: { color: "white" } }
 ```
 
 ## Conditionals
