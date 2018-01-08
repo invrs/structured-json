@@ -10,6 +10,8 @@ Action                                | Operator     | Key/Value
 [Mixin](#mixin)                       | `$`          | Key
 [Conditional Defaults](#conditionals) | `<<?`, `>>?` | Key
 
+Use the [update](#update) function for immutable updates.
+
 ## Install
 
 ```bash
@@ -19,7 +21,7 @@ npm install structured-json
 ## Import
 
 ```js
-import { build } from "structured-json"
+import { build, update } from "structured-json"
 ```
 
 ## Assign
@@ -89,19 +91,21 @@ veganProducts   // { kale: { vegan },
                 //   tofu: { vegan } }
 ```
 
-You can even define defaults for grandchild objects. Increment depth with successive merge operators (`">> >>":`).
+Define defaults for sibling child objects with successive merge operators (`">> >>":`).
 
 ## Mixin
 
+A mixin is a variable meant only for referencing, and does not show up in enumeration.
+
 ```js
 let { products } = build({
-  "$green": {
-    color: "green"
-  },
-  "$white": {
-    color: "white"
-  },
   "products": {
+    "$green": {
+      "color": "green"
+    },
+    "$white": {
+      "color": "white"
+    },
     "milk": { "<<": "$white" },
     "kale": { "<<": "$green" },
     "tofu": { "<<": "$white" }
@@ -120,10 +124,10 @@ let { products } = build({
   "winter": true,
   "products": {
     ">>? winter": {
-      local: false
+      "local": false
     },
     "kale": {
-      local: true
+      "local": true
     }
   }
 })
@@ -131,3 +135,14 @@ let { products } = build({
 products // { kale: { local: false } }
 ```
 
+## Update
+
+```js
+let config = build(...)
+
+config = update(config,
+  "products.lettuce <<", { "<<": "$green" }  
+)
+```
+
+The `update` function uses [`immutability-helper`](https://github.com/kolodny/immutability-helper) to create entirely new objects for each update.
