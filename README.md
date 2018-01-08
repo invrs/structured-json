@@ -128,6 +128,6 @@ let { products } = build({
   }
 })
 
-products // { kale: { local } }
+products // { kale: { local: false } }
 ```
 
