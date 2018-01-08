@@ -1,14 +1,14 @@
 # Structured JSON
 
-Framework for JSON structures that are easy to read, write, and document.
+Operators that make complex JSON structures easy to read and write.
 
-Action                               | Operator     | Key/Value
------------------------------------- | ------------ | ---------
-[Assign Value](#assign)              | `<=`         | Value
-[Assign Defaults](#defaults)         | `<<`, `>>`   | Key
-[Merge](#merge)                      | `<<`, `>>`   | Value
-[Mixin](#mixin)                      | `$`          | Key
-[Conditional Defaults](#conditional) | `<<?`, `>>?` | Key
+Action                                | Operator     | Key/Value
+------------------------------------- | ------------ | ---------
+[Assign Value](#assign)               | `<=`         | Value
+[Assign Defaults](#defaults)          | `<<`, `>>`   | Key
+[Merge](#merge)                       | `<<`, `>>`   | Value
+[Mixin](#mixin)                       | `$`          | Key
+[Conditional Defaults](#conditionals) | `<<?`, `>>?` | Key
 
 ## Install
 
@@ -42,7 +42,7 @@ stores.grocery.products // { milk }
 products.milk.store     // { products }
 ```
 
-Assignment supports circular references, but is up to you to be careful about infinite enumeration.
+Assignment supports circular references, but it is up to you to be careful about infinite enumeration.
 
 ## Merge
 
@@ -67,6 +67,8 @@ products // { eggs: {},
 
 ## Defaults
 
+When used in a key, the merge operator defines a default object for its siblings (`>>`) or its parent (`<<`):
+
 ```js
 let { organicProducts, veganProducts } = build({
   "organicProducts": {
@@ -87,9 +89,7 @@ veganProducts   // { kale: { vegan },
                 //   tofu: { vegan } }
 ```
 
-Here the merge operator defines a default object for its siblings.
-
-Add +1 to the depth by adding successive merge operators (`">> >>":`).
+You can even define defaults for grandchild objects. Increment depth with successive merge operators (`">> >>":`).
 
 ## Mixin
 
@@ -112,3 +112,22 @@ products // { milk: { color },
          //   kale: { color },
          //   tofu: { color } }
 ```
+
+## Conditionals
+
+```js
+let { products } = build({
+  "winter": true,
+  "products": {
+    ">>? winter": {
+      local: false
+    },
+    "kale": {
+      local: true
+    }
+  }
+})
+
+products // { kale: { local } }
+```
+
