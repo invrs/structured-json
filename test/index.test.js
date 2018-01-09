@@ -7,8 +7,8 @@ function testObj(obj) {
 
 test("defineHiddenProps", () => {
   let obj = testObj({ "test": {} })
+  expect(obj._ops).toEqual([])
   expect(obj._original).toEqual({ "test": {} })
-  expect(obj._updates).toEqual([])
 })
 
 test("deleteMixins", () => {
@@ -19,7 +19,10 @@ test("deleteMixins", () => {
     }
   })
   deleteMixins({ rootObj: obj })
-  expect(obj).toEqual({ "test": {} })
+  expect(obj._ops).toEqual([
+    { op: 'delete', loc: [ '$mixin1' ] },
+    { op: 'delete', loc: [ 'test', '$mixin2' ] }
+  ])
 })
 
 test("resolveMixins", () => {
@@ -32,14 +35,16 @@ test("resolveMixins", () => {
     }
   })
   resolveMixins({ rootObj: obj })
-  expect(obj).toEqual({
-    "$mixin1": {},
-    "$mixin2": {},
-    "test": {
-      "$mixin2": {},
-      "testChild": "<= $mixin1 << test.$mixin2"
-    }
-  })
+  expect(obj._ops).toEqual([
+    { op: 'resolve',
+      loc: [ 'test', 'testChild' ],
+      from: '$mixin1',
+      to: '$mixin1' },
+    { op: 'resolve',
+      loc: [ 'test', 'testChild' ],
+      from: '$mixin2',
+      to: 'test.$mixin2' }
+  ])
 })
 
 test("mergeDefaults", () => {
@@ -47,11 +52,17 @@ test("mergeDefaults", () => {
     "condition": true,
     "<<": { "test": {} },
     ">>": { "test3": {} },
+    ">> >>": { "test4": {} },
     "test2": {
       "<<? condition": { "conditional": {} },
       "<<? condition condition2": { "conditional2": {} }
     }
   })
   mergeDefaults({ rootObj: obj })
-  console.log(obj)
+  expect(obj).toEqual({
+    condition: true,
+    test2: { test3: { test4: {} } },
+    test: { test3: { test4: {} } },
+    conditional: {}
+  })
 })
