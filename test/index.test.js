@@ -60,9 +60,11 @@ test("mergeDefaults", () => {
   })
   mergeDefaults({ rootObj: obj })
   expect(obj).toEqual({
-    condition: true,
-    test2: { test3: { test4: {} } },
-    test: { test3: { test4: {} } },
-    conditional: {}
+    "condition": true,
+    "test": { "test3": { "test4": {} } },
+    "test2": {
+      "conditional": { "test4": {} },
+      "test3": { "test4": {} }
+    }
   })
 })
