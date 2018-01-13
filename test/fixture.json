@@ -32,6 +32,9 @@
       "<<?production": {
         "name": "company-images-prod"
       },
+      "<<?$test": {
+        "test": true
+      },
       "<<": "$test",
       "index2": "<= $test.index",
       "index3": "<= aws-bucket.$test.index",
