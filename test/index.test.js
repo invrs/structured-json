@@ -114,6 +114,5 @@ test("mergeDefaults", () => {
 
 test("build", () => {
   let base = build(fixture, { staging: true })
-  console.log(base._ops)
   console.log(base)
 })
