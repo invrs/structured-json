@@ -12,34 +12,34 @@ const fixture = JSON.parse(
   readFileSync(`${__dirname}/fixture.json`, "utf8")
 )
 
-
 function testObj(obj) {
-  defineHiddenProps({ rootObj: obj, json: JSON.stringify(obj) })
-  return obj
+  let params = { base: obj, orig: obj, ops: [] }
+  defineHiddenProps({ ...params, json: JSON.stringify(obj) })
+  return params
 }
 
 test("defineHiddenProps", () => {
-  let rootObj = testObj({ "test": {} })
-  expect(rootObj._ops).toEqual([])
-  expect(rootObj._original).toEqual({ "test": {} })
+  let { base } = testObj({ "test": {} })
+  expect(base._ops).toEqual([])
+  expect(base._original).toEqual({ "test": {} })
 })
 
 test("deleteMixins", () => {
-  let rootObj = testObj({
+  let params = testObj({
     "$mixin1": {},
     "test": {
       "$mixin2": {}
     }
   })
-  deleteMixins({ rootObj, obj: rootObj._original })
-  expect(rootObj._ops).toEqual([
+  deleteMixins(params)
+  expect(params.base._ops).toEqual([
     { op: 'delete', loc: [ '$mixin1' ] },
     { op: 'delete', loc: [ 'test', '$mixin2' ] }
   ])
 })
 
 test("resolveMixins", () => {
-  let rootObj = testObj({
+  let params = testObj({
     "$mixin1": {},
     "$mixin2": {},
     "test": {
@@ -48,8 +48,8 @@ test("resolveMixins", () => {
       "<<? $mixin2": "$mixin1"
     }
   })
-  resolveMixins({ rootObj, obj: rootObj._original })
-  expect(rootObj._ops).toEqual([
+  resolveMixins(params)
+  expect(params.base._ops).toEqual([
     { "op": "replaceInValue",
       "from": "$mixin2",
       "to": "test.$mixin2",
@@ -64,7 +64,7 @@ test("resolveMixins", () => {
 })
 
 test("mergeDefaults", () => {
-  let rootObj = testObj({
+  let params = testObj({
     "condition": true,
     "<<": { "test": {} },
     ">>": { "test3": {} },
@@ -74,8 +74,8 @@ test("mergeDefaults", () => {
       "<<? condition condition2": { "conditional2": {} }
     }
   })
-  mergeDefaults({ rootObj, obj: rootObj._original })
-  expect(rootObj._ops).toEqual([
+  mergeDefaults(params)
+  expect(params.base._ops).toEqual([
     { op: 'mergeOver',
       dest: [ 'test2' ],
       source: [ 'test2', '<<? condition' ] },
@@ -98,7 +98,7 @@ test("mergeDefaults", () => {
 })
 
 test("mergeDefaults", () => {
-  let rootObj = testObj({
+  let params = testObj({
     "test": "1",
     "$mixin": {},
     "<<": { "test2": "2" },
@@ -106,14 +106,14 @@ test("mergeDefaults", () => {
       "test4": "<= $mixin"
     }
   })
-  markDynamics({ rootObj, obj: rootObj._original })
-  expect(rootObj._ops).toEqual([
+  markDynamics(params)
+  expect(params.base._ops).toEqual([
     { op: 'isDynamic', loc: [ 'test3', 'test4' ] }
   ])
 })
 
 test("build", () => {
-  let rootObj = build(fixture, { staging: true })
-  console.log(rootObj._ops)
-  console.log(rootObj)
+  let base = build(fixture, { staging: true })
+  console.log(base._ops)
+  console.log(base)
 })
