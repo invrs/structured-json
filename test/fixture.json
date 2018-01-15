@@ -35,7 +35,7 @@
       "<<?$test": {
         "test": true
       },
-      "<<": "$test",
+      "<<": "<= $test",
       "index2": "<= $test.index",
       "index3": "<= aws-bucket.$test.index",
       "hello": false
