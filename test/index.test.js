@@ -114,5 +114,5 @@ test("mergeDefaults", () => {
 
 test("build", () => {
   let base = build(fixture, { staging: true })
-  console.log(base)
+  console.log(JSON.stringify(base, null, 2))
 })

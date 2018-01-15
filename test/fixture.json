@@ -16,7 +16,8 @@
     "east": {
       "image-bucket": "<< aws-bucket.image << $test >> $test2",
       "basic-bucket": "<= aws-bucket.image >> $test << $test2"
-    }
+    },
+    "west": {}
   },
   "aws-bucket": {
     ">>": {
