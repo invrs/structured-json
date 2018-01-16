@@ -30,10 +30,10 @@ import { build, update } from "structured-json"
 let { stores, products } = build({
   "stores": {
     "grocery": {
-      "products": "<= foodProducts"
+      "products": "<= products"
     }
   },
-  "foodProducts": {
+  "products": {
     "milk": {
       "store": "<= stores.grocery"
     }
