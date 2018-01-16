@@ -126,9 +126,10 @@ let { products } = build({
     ">>? winter": {
       "local": false
     },
-    "kale": {
+    ">>": {
       "local": true
-    }
+    },
+    "kale": {}
   }
 })
 
