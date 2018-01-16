@@ -1,7 +1,6 @@
 import { readFileSync } from "fs"
 import {
   build,
-  defineHiddenProps,
   deleteMixins,
   markDynamics,
   mergeDefaults,
@@ -13,16 +12,8 @@ const fixture = JSON.parse(
 )
 
 function testObj(obj) {
-  let params = { base: obj, orig: obj, ops: [] }
-  defineHiddenProps({ ...params, json: JSON.stringify(obj) })
-  return params
+  return { base: obj, orig: obj, ops: [] }
 }
-
-test("defineHiddenProps", () => {
-  let { base } = testObj({ "test": {} })
-  expect(base._ops).toEqual([])
-  expect(base._original).toEqual({ "test": {} })
-})
 
 test("deleteMixins", () => {
   let params = testObj({
@@ -31,8 +22,7 @@ test("deleteMixins", () => {
       "$mixin2": {}
     }
   })
-  deleteMixins(params)
-  expect(params.base._ops).toEqual([
+  expect(deleteMixins(params)).toEqual([
     { op: 'delete', loc: [ '$mixin1' ] },
     { op: 'delete', loc: [ 'test', '$mixin2' ] }
   ])
@@ -48,8 +38,7 @@ test("resolveMixins", () => {
       "<<? $mixin2": "$mixin1"
     }
   })
-  resolveMixins(params)
-  expect(params.base._ops).toEqual([
+  expect(resolveMixins(params)).toEqual([
     { "op": "replaceValue",
       "replace": "$mixin2",
       "replaceWith": "test.$mixin2",
@@ -74,8 +63,7 @@ test("mergeDefaults", () => {
       "<<? condition condition2": { "conditional2": {} }
     }
   })
-  mergeDefaults(params)
-  expect(params.base._ops).toEqual([
+  expect(mergeDefaults(params)).toEqual([
     { op: 'mergeOver',
       dest: [ 'test2' ],
       source: [ 'test2', '<<? condition' ] },
@@ -106,8 +94,7 @@ test("mergeDefaults", () => {
       "test4": "<= $mixin"
     }
   })
-  markDynamics(params)
-  expect(params.base._ops).toEqual([
+  expect(markDynamics(params)).toEqual([
     { op: 'isDynamic',
       loc: [ 'test3', 'test4' ],
       "matches": [
