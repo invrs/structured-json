@@ -1,7 +1,7 @@
 import { readFileSync } from "fs"
 import {
   build,
-  deleteMixins,
+  deleteDynamics,
   markDynamics,
   mergeDefaults,
   resolveMixins
@@ -15,14 +15,16 @@ function testObj(obj) {
   return { base: obj, orig: obj, ops: [] }
 }
 
-test("deleteMixins", () => {
+test("deleteDynamics", () => {
   let params = testObj({
+    "<<": {},
     "$mixin1": {},
     "test": {
       "$mixin2": {}
     }
   })
-  expect(deleteMixins(params)).toEqual([
+  expect(deleteDynamics(params)).toEqual([
+    { op: 'delete', loc: [ '<<' ] },
     { op: 'delete', loc: [ '$mixin1' ] },
     { op: 'delete', loc: [ 'test', '$mixin2' ] }
   ])
