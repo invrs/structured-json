@@ -1,7 +1,7 @@
 import {
   build,
-  deleteDynamics,
-  markDynamics,
+  deleteDynamicKeys,
+  markDynamicValues,
   mergeDefaults,
   resolveMixins
 } from "../lib"
@@ -10,7 +10,7 @@ function testObj(obj) {
   return { base: obj, orig: obj, ops: [] }
 }
 
-test("deleteDynamics", () => {
+test("deleteDynamicKeys", () => {
   let params = testObj({
     "<<": {},
     "$mixin1": {},
@@ -18,7 +18,7 @@ test("deleteDynamics", () => {
       "$mixin2": {}
     }
   })
-  expect(deleteDynamics(params)).toEqual([
+  expect(deleteDynamicKeys(params)).toEqual([
     { op: 'delete', loc: [ 'test', '$mixin2' ] },
     { op: 'delete', loc: [ '<<' ] },
     { op: 'delete', loc: [ '$mixin1' ] },
@@ -61,24 +61,42 @@ test("mergeDefaults", () => {
     }
   })
   expect(mergeDefaults(params)).toEqual([
-    { op: 'mergeOver',
-      dest: [ 'test2' ],
-      source: [ 'test2', '<<? condition' ] },
-    { op: 'mergeOver',
-      dest: [],
-      source: [ '<<' ] },
-    { op: 'mergeUnder',
-      dest: [ 'test2' ],
-      source: [ '>>' ] },
-    { op: 'mergeUnder',
-      dest: [ '<<', 'test' ],
-      source: [ '>> >>' ] },
-    { op: 'mergeUnder',
-      dest: [ '>>', 'test3' ],
-      source: [ '>> >>' ] },
-    { op: 'mergeUnder',
-      dest: [ '>> >>', 'test4' ],
-      source: [ '>> >>' ] }
+    { "dest": ["test2"],
+      "op": "mergeOver",
+      "source": ["test2", "<<? condition"]
+    },
+    { "loc": ["test2", "<<? condition"],
+      "op": "delete"
+    },
+    { "dest": [],
+      "op": "mergeOver",
+      "source": ["<<"]
+    },
+    { "loc": ["<<"],
+      "op": "delete"
+    },
+    { "dest": ["test2"],
+      "op": "mergeUnder",
+      "source": [">>"]
+    },
+    { "loc": [">>"],
+      "op": "delete"
+    },
+    { "dest": ["<<", "test"],
+      "op": "mergeUnder",
+      "source": [">> >>"]
+    },
+    { "dest": [">>", "test3"],
+      "op": "mergeUnder",
+      "source": [">> >>"]
+    },
+    { "dest": [">> >>", "test4"],
+      "op": "mergeUnder",
+      "source": [">> >>"]
+    },
+    { "loc": [">> >>"],
+      "op": "delete"
+    }
   ])
 })
 
@@ -91,7 +109,7 @@ test("mergeDefaults", () => {
       "test4": "<= $mixin"
     }
   })
-  expect(markDynamics(params)).toEqual([
+  expect(markDynamicValues(params)).toEqual([
     { op: 'isDynamic',
       loc: [ 'test3', 'test4' ],
       "matches": [

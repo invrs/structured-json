@@ -16,3 +16,19 @@ test("conditionals", () => {
 
   expect(products).toEqual({ kale: { local: false } })
 })
+
+test.only("conditional within a default", () => {
+  let { products } = build({
+    "winter": true,
+    "products": {
+      ">>": {
+        "<<? winter": {
+          "local": false
+        }
+      },
+      "kale": {}
+    }
+  })
+
+  expect(products).toEqual({ kale: { local: false } })
+})
