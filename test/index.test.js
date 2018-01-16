@@ -108,7 +108,16 @@ test("mergeDefaults", () => {
   })
   markDynamics(params)
   expect(params.base._ops).toEqual([
-    { op: 'isDynamic', loc: [ 'test3', 'test4' ] }
+    { op: 'isDynamic',
+      loc: [ 'test3', 'test4' ],
+      "matches": [
+        { "condition": false,
+          "depth": 0.5,
+          "direction": "<",
+          "refs": ["$mixin"]
+        }
+      ]
+    }
   ])
 })
 

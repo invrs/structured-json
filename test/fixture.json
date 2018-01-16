@@ -14,8 +14,8 @@
       "world": true
     },
     "east": {
-      "image-bucket": "<< aws-bucket.image << $test >> $test2",
-      "basic-bucket": "<= aws-bucket.image >> $test << $test2"
+      "image-bucket": "<< $test2 << $test",
+      "basic-bucket": "<= $test << $test2"
     },
     "west": {}
   },
