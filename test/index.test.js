@@ -50,14 +50,14 @@ test("resolveMixins", () => {
   })
   resolveMixins(params)
   expect(params.base._ops).toEqual([
-    { "op": "replaceInValue",
-      "from": "$mixin2",
-      "to": "test.$mixin2",
+    { "op": "replaceValue",
+      "replace": "$mixin2",
+      "replaceWith": "test.$mixin2",
       "loc": ["test", "testChild"]
     },
-    { "op": "replaceInKey",
-      "from": "$mixin2",
-      "to": "test.$mixin2",
+    { "op": "replaceKey",
+      "replace": "$mixin2",
+      "replaceWith": "test.$mixin2",
       "loc": ["test", "<<? $mixin2"]
     }
   ])
