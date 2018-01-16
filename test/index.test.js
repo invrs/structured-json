@@ -19,9 +19,9 @@ test("deleteDynamics", () => {
     }
   })
   expect(deleteDynamics(params)).toEqual([
+    { op: 'delete', loc: [ 'test', '$mixin2' ] },
     { op: 'delete', loc: [ '<<' ] },
     { op: 'delete', loc: [ '$mixin1' ] },
-    { op: 'delete', loc: [ 'test', '$mixin2' ] }
   ])
 })
 
