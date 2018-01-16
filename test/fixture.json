@@ -14,7 +14,7 @@
       "world": true
     },
     "east": {
-      "image-bucket": "<< $test2 << $test",
+      "image-bucket": "<= $test2 << $test",
       "basic-bucket": "<= $test << $test2"
     },
     "west": {}
