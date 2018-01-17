@@ -10,8 +10,6 @@ Action                                | Operator     | Key/Value
 [Mixin](#mixin)                       | `$`          | Key
 [Conditional Defaults](#conditionals) | `<<?`, `>>?` | Key
 
-Use the [update](#update) function for immutable updates.
-
 ## Install
 
 ```bash
@@ -135,15 +133,3 @@ let { products } = build({
 
 products // { kale: { local: false } }
 ```
-
-## Update
-
-```js
-let config = build(...)
-
-config = update(config,
-  "products.lettuce <<", { "<<": "$green" }  
-)
-```
-
-The `update` function uses [`immutability-helper`](https://github.com/kolodny/immutability-helper) to create entirely new objects for each update.
