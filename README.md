@@ -59,7 +59,8 @@ let { products } = build({
   products: "<= organicProducts << veganProducts",
 })
 
-products // { eggs: {},
+products
+// { eggs: {},
 //   milk: {},
 //   kale: {},
 //   tofu: {} }
@@ -83,9 +84,12 @@ let { organicProducts, veganProducts } = build({
   },
 })
 
-organicProducts // { eggs: { organic },
+organicProducts
+// { eggs: { organic },
 //   milk: { organic } }
-veganProducts // { kale: { vegan },
+
+veganProducts
+// { kale: { vegan },
 //   tofu: { vegan } }
 ```
 
@@ -110,7 +114,8 @@ let { products } = build({
   },
 })
 
-products // { milk: { color: "white" },
+products
+// { milk: { color: "white" },
 //   kale: { color: "green" },
 //   tofu: { color: "white" } }
 ```
