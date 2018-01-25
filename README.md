@@ -2,13 +2,13 @@
 
 Operators that make complex JSON structures easy to read and write.
 
-Action                                | Operator     | Key/Value
-------------------------------------- | ------------ | ---------
-[Assign Value](#assign)               | `<=`         | Value
-[Assign Defaults](#defaults)          | `<<`, `>>`   | Key
-[Merge](#merge)                       | `<<`, `>>`   | Value
-[Mixin](#mixin)                       | `$`          | Key
-[Conditional Defaults](#conditionals) | `<<?`, `>>?` | Key
+| Action                                | Operator     | Key/Value |
+| ------------------------------------- | ------------ | --------- |
+| [Assign Value](#assign)               | `<=`         | Value     |
+| [Assign Defaults](#defaults)          | `<<`, `>>`   | Key       |
+| [Merge](#merge)                       | `<<`, `>>`   | Value     |
+| [Mixin](#mixin)                       | `$`          | Key       |
+| [Conditional Defaults](#conditionals) | `<<?`, `>>?` | Key       |
 
 ## Install
 
@@ -26,20 +26,20 @@ import { build, update } from "structured-json"
 
 ```js
 let { stores, products } = build({
-  "stores": {
-    "grocery": {
-      "products": "<= products"
-    }
+  stores: {
+    grocery: {
+      products: "<= products",
+    },
   },
-  "products": {
-    "milk": {
-      "store": "<= stores.grocery"
-    }
-  }
+  products: {
+    milk: {
+      store: "<= stores.grocery",
+    },
+  },
 })
 
 stores.grocery.products // { milk }
-products.milk.store     // { products }
+products.milk.store // { products }
 ```
 
 Assignment supports circular references, but it is up to you to be careful about infinite enumeration.
@@ -48,21 +48,21 @@ Assignment supports circular references, but it is up to you to be careful about
 
 ```js
 let { products } = build({
-  "organicProducts": {
-    "eggs": {},
-    "milk": {}
+  organicProducts: {
+    eggs: {},
+    milk: {},
   },
-  "veganProducts": {
-    "kale": {},
-    "tofu": {}
+  veganProducts: {
+    kale: {},
+    tofu: {},
   },
-  "products": "<= organicProducts << veganProducts"
+  products: "<= organicProducts << veganProducts",
 })
 
 products // { eggs: {},
-         //   milk: {},
-         //   kale: {},
-         //   tofu: {} }
+//   milk: {},
+//   kale: {},
+//   tofu: {} }
 ```
 
 ## Defaults
@@ -71,22 +71,22 @@ When used in a key, the merge operator defines a default object for its siblings
 
 ```js
 let { organicProducts, veganProducts } = build({
-  "organicProducts": {
-    ">>": { "organic": true },
-    "eggs": {},
-    "milk": {}
+  organicProducts: {
+    ">>": { organic: true },
+    eggs: {},
+    milk: {},
   },
-  "veganProducts": {
-    ">>": { "vegan": true },
-    "kale": {},
-    "tofu": {}
-  }
+  veganProducts: {
+    ">>": { vegan: true },
+    kale: {},
+    tofu: {},
+  },
 })
 
 organicProducts // { eggs: { organic },
-                //   milk: { organic } }
-veganProducts   // { kale: { vegan },
-                //   tofu: { vegan } }
+//   milk: { organic } }
+veganProducts // { kale: { vegan },
+//   tofu: { vegan } }
 ```
 
 Define defaults for sibling child objects with successive merge operators (`">> >>":`).
@@ -97,38 +97,38 @@ A mixin is a variable meant only for referencing, and does not show up in enumer
 
 ```js
 let { products } = build({
-  "products": {
-    "$green": {
-      "color": "green"
+  products: {
+    $green: {
+      color: "green",
     },
-    "$white": {
-      "color": "white"
+    $white: {
+      color: "white",
     },
-    "milk": { "<<": "$white" },
-    "kale": { "<<": "$green" },
-    "tofu": { "<<": "$white" }
-  }
+    milk: { "<<": "$white" },
+    kale: { "<<": "$green" },
+    tofu: { "<<": "$white" },
+  },
 })
 
 products // { milk: { color: "white" },
-         //   kale: { color: "green" },
-         //   tofu: { color: "white" } }
+//   kale: { color: "green" },
+//   tofu: { color: "white" } }
 ```
 
 ## Conditionals
 
 ```js
 let { products } = build({
-  "winter": true,
-  "products": {
+  winter: true,
+  products: {
     ">>? winter": {
-      "local": false
+      local: false,
     },
     ">>": {
-      "local": true
+      local: true,
     },
-    "kale": {}
-  }
+    kale: {},
+  },
 })
 
 products // { kale: { local: false } }
