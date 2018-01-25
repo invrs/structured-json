@@ -9,33 +9,33 @@ test("build", () => {
   let base = build(fixture, { staging: true })
   expect(base).toEqual({
     "aws-account": {
-      "east": {
+      east: {
         "image-bucket": {
-          "hello": false,
-          "world": true
+          hello: false,
+          world: true,
         },
         "basic-bucket": {
-          "hello": true,
-          "world": true
-        }
+          hello: true,
+          world: true,
+        },
       },
-      "west": {
+      west: {
         "image-bucket": {
-          "accelerate": true,
-          "error": "error.html"
-        }
-      }
+          accelerate: true,
+          error: "error.html",
+        },
+      },
     },
     "aws-bucket": {
-      "image": {
-        "index2": "index.html",
-        "index3": "index.html",
-        "hello": false,
-        "name": "company-images-stag",
-        "test": true,
-        "grant": "id=xxx"
-      }
+      image: {
+        index2: "index.html",
+        index3: "index.html",
+        hello: false,
+        name: "company-images-stag",
+        test: true,
+        grant: "id=xxx",
+      },
     },
-    "staging": true
+    staging: true,
   })
 })

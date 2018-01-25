@@ -2,15 +2,15 @@ import { build } from "../lib"
 
 test("merge", () => {
   let { products } = build({
-    "organicProducts": {
-      "eggs": {},
-      "milk": {}
+    organicProducts: {
+      eggs: {},
+      milk: {},
     },
-    "veganProducts": {
-      "kale": {},
-      "tofu": {}
+    veganProducts: {
+      kale: {},
+      tofu: {},
     },
-    "products": "<= organicProducts << veganProducts"
+    products: "<= organicProducts << veganProducts",
   })
 
   expect(products).toHaveProperty("kale")
