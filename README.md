@@ -108,9 +108,9 @@ let { products } = build({
     $white: {
       color: "white",
     },
-    milk: { "<<": "$white" },
-    kale: { "<<": "$green" },
-    tofu: { "<<": "$white" },
+    milk: { "<<": "<= $white" },
+    kale: { "<<": "<= $green" },
+    tofu: { "<<": "<= $white" },
   },
 })
 
